@@ -21,6 +21,7 @@
 #include "main.h"
 #include "adc.h"
 #include "dac.h"
+#include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -69,6 +70,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
   unsigned int i=0;
+  uint32_t adc_buff[5];
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -89,18 +91,28 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_ADC2_Init();
   MX_DAC1_Init();
   MX_USART1_UART_Init();
   MX_TIM16_Init();
   MX_TIM17_Init();
   MX_TIM4_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   OLED_Init();
+  HAL_TIM_Base_Start(&htim2);
+  HAL_ADC_Start_DMA(&hadc2,adc_buff,5);
+
   HAL_TIMEx_PWMN_Start(&htim16,TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
   HAL_TIMEx_PWMN_Start(&htim17,TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim17,TIM_CHANNEL_1);
+
+  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 2048);
+  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 2048);
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -109,11 +121,16 @@ int main(void)
   {
 	  i = (i+1)%100;
 	  HAL_GPIO_TogglePin(LED_HEART_GPIO_Port, LED_HEART_Pin);
-	  OLED_ShowNum(103,48,i,3,16,1);
+
+	  OLED_ShowNum(0,8,adc_buff[0],4,16,1);
+	  OLED_ShowNum(0,24,adc_buff[1],4,16,1);
+	  OLED_ShowNum(0,40,adc_buff[2],4,16,1);
+	  OLED_ShowNum(64,8,adc_buff[3],4,16,1);
+	  OLED_ShowNum(64,24,adc_buff[4],4,16,1);
 	  OLED_Refresh();
 	  __HAL_TIM_SetCompare(&htim16, TIM_CHANNEL_1, i*5);
 	  __HAL_TIM_SetCompare(&htim17, TIM_CHANNEL_1, i*5);
-	  HAL_Delay(100);
+//	  HAL_Delay(100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
