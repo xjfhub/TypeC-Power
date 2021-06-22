@@ -48,7 +48,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+  uint32_t cnt1=0,cnt2=0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -113,6 +113,7 @@ int main(void)
   HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 2048);
   HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
   HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
+  HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -122,11 +123,13 @@ int main(void)
 	  i = (i+1)%100;
 	  HAL_GPIO_TogglePin(LED_HEART_GPIO_Port, LED_HEART_Pin);
 
+    cnt1 = (uint32_t)(__HAL_TIM_GET_COUNTER(&htim4));
 	  OLED_ShowNum(0,8,adc_buff[0],4,16,1);
 	  OLED_ShowNum(0,24,adc_buff[1],4,16,1);
 	  OLED_ShowNum(0,40,adc_buff[2],4,16,1);
 	  OLED_ShowNum(64,8,adc_buff[3],4,16,1);
 	  OLED_ShowNum(64,24,adc_buff[4],4,16,1);
+	  OLED_ShowNum(64,40,cnt2,4,16,1);
 	  OLED_Refresh();
 	  __HAL_TIM_SetCompare(&htim16, TIM_CHANNEL_1, i*5);
 	  __HAL_TIM_SetCompare(&htim17, TIM_CHANNEL_1, i*5);
