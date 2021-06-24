@@ -32,12 +32,16 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "stdio.h"
 
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-uint32_t cnt1,cnt2;
+extern uint32_t cnt1,cnt2;
+extern uint32_t sys_time_ms;
+extern uint32_t adc_buff[5];
+
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

@@ -28,7 +28,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
 #include "oled.h"
+#include "ui.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,7 +50,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-  uint32_t cnt1=0,cnt2=0;
+uint32_t cnt1 = 0, cnt2 = 0;
+uint32_t sys_time_ms = 0;
+uint32_t adc_buff[5];
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -69,8 +74,7 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  unsigned int i=0;
-  uint32_t adc_buff[5];
+  unsigned int i = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -99,41 +103,35 @@ int main(void)
   MX_TIM17_Init();
   MX_TIM4_Init();
   MX_TIM2_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-  OLED_Init();
-  HAL_TIM_Base_Start(&htim2);
-  HAL_ADC_Start_DMA(&hadc2,adc_buff,5);
+  HAL_TIM_Base_Start(&htim2);             //TIM2触发ADC
+  HAL_ADC_Start_DMA(&hadc2, adc_buff, 5); //�??????启DMA
 
-  HAL_TIMEx_PWMN_Start(&htim16,TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
-  HAL_TIMEx_PWMN_Start(&htim17,TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&htim17,TIM_CHANNEL_1);
+//   HAL_TIMEx_PWMN_Start(&htim16, TIM_CHANNEL_1); //�??????启TIM16_CH1N L
+//   HAL_TIM_PWM_Start(&htim16, TIM_CHANNEL_1);    //�??????启TIM16_CH1 H
+//  HAL_TIMEx_PWMN_Start(&htim17, TIM_CHANNEL_1); //�??????启TIM17_CH1N H
+//  HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1);    //�??????启TIM17_CH1 L
 
-  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 2048);
-  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 2048);
-  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
-  HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
-  HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
+  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 2048); //设置DAC1_CH1输出1.65V
+  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 2048); //设置DAC1_CH2输出1.65V
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);                           //�??????启DAC1_CH1
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);                           //�??????启DAC1_CH2
+  HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);                 //�??????启TIM4编码�??????
+  HAL_TIM_Base_Start_IT(&htim3);
+  OLED_Init();                                                    //OLED初始�??????
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  i = (i+1)%100;
-	  HAL_GPIO_TogglePin(LED_HEART_GPIO_Port, LED_HEART_Pin);
-
+    HAL_GPIO_TogglePin(LED_HEART_GPIO_Port, LED_HEART_Pin);
     cnt1 = (uint32_t)(__HAL_TIM_GET_COUNTER(&htim4));
-	  OLED_ShowNum(0,8,adc_buff[0],4,16,1);
-	  OLED_ShowNum(0,24,adc_buff[1],4,16,1);
-	  OLED_ShowNum(0,40,adc_buff[2],4,16,1);
-	  OLED_ShowNum(64,8,adc_buff[3],4,16,1);
-	  OLED_ShowNum(64,24,adc_buff[4],4,16,1);
-	  OLED_ShowNum(64,40,cnt2,4,16,1);
-	  OLED_Refresh();
-	  __HAL_TIM_SetCompare(&htim16, TIM_CHANNEL_1, i*5);
-	  __HAL_TIM_SetCompare(&htim17, TIM_CHANNEL_1, i*5);
-//	  HAL_Delay(100);
+
+    main_ui();
+    printf("now time is %5d ms\n", sys_time_ms);
+    HAL_Delay(100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

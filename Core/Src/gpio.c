@@ -103,7 +103,35 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
-
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  if (__HAL_GPIO_EXTI_GET_IT(GPIO_Pin) != 0x00u)
+  {
+	  if(GPIO_Pin == GPIO_PIN_14)
+	  {
+		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_14) == HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_15))
+		  {
+			  cnt2++;
+		  }
+		  else
+		  {
+			  cnt2--;
+		  }
+	  }
+	  if(GPIO_Pin == GPIO_PIN_15)
+	  {
+		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_14) == HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_15))
+		  {
+			  cnt2--;
+		  }
+		  else
+		  {
+			  cnt2++;
+		  }
+	  }
+	  cnt2 = cnt2%60;
+  }
+}
 /* USER CODE END 2 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

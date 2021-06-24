@@ -23,6 +23,7 @@
 #include "stm32g4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "tim.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,6 +58,7 @@
 
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_adc2;
+extern TIM_HandleTypeDef htim3;
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
 
@@ -215,6 +217,54 @@ void DMA1_Channel1_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles TIM3 global interrupt.
+  */
+void TIM3_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM3_IRQn 0 */
+  static uint16_t v_m_set=2000;
+  static uint16_t v_out_set=1000;
+
+  HAL_GPIO_TogglePin(CC_GPIO_Port, CC_Pin);
+
+  sys_time_ms++;
+  /*升压控制*/
+  if(adc_buff[2]<v_m_set)
+  {
+	  __HAL_TIM_SetCompare(&htim16, TIM_CHANNEL_1, 1000-(v_m_set-adc_buff[2])/10);
+	  HAL_TIMEx_PWMN_Start(&htim16, TIM_CHANNEL_1); //TIM16_CH1N L
+  }
+  else
+  {
+	  __HAL_TIM_SetCompare(&htim16, TIM_CHANNEL_1, 1000);
+	  HAL_TIMEx_PWMN_Stop(&htim16, TIM_CHANNEL_1); //TIM16_CH1N L
+  }
+  /*降压控制*/
+  if(adc_buff[3]<v_out_set)
+  {
+	  __HAL_TIM_SetCompare(&htim17, TIM_CHANNEL_1, 700+(v_out_set-adc_buff[3])/10);
+	  HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1); //TIM17_CH1 L
+	  HAL_TIMEx_PWMN_Start(&htim17, TIM_CHANNEL_1); //TIM17_CH1N H
+  }
+  else
+  {
+	  __HAL_TIM_SetCompare(&htim17, TIM_CHANNEL_1, 0);
+	  HAL_TIM_PWM_Stop(&htim17, TIM_CHANNEL_1); //TIM17_CH1 L
+	  HAL_TIMEx_PWMN_Stop(&htim17, TIM_CHANNEL_1); //TIM17_CH1N H
+  }
+
+//  __HAL_TIM_SetCompare(&htim16, TIM_CHANNEL_1, 990);	//Vin/0.99
+//  __HAL_TIM_SetCompare(&htim17, TIM_CHANNEL_1, 200);	//VH*0.2
+  HAL_GPIO_TogglePin(CC_GPIO_Port, CC_Pin);
+
+  /* USER CODE END TIM3_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim3);
+  /* USER CODE BEGIN TIM3_IRQn 1 */
+
+  /* USER CODE END TIM3_IRQn 1 */
+}
+
+/**
   * @brief This function handles USART1 global interrupt / USART1 wake-up interrupt through EXTI line 25.
   */
 void USART1_IRQHandler(void)
@@ -244,34 +294,6 @@ void EXTI15_10_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-  if (__HAL_GPIO_EXTI_GET_IT(GPIO_Pin) != 0x00u)
-  {
-	  if(GPIO_Pin == GPIO_PIN_14)
-	  {
-		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_14) == HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_15))
-		  {
-			  cnt2++;
-		  }
-		  else
-		  {
-			  cnt2--;
-		  }
-	  }
-	  if(GPIO_Pin == GPIO_PIN_15)
-	  {
-		  if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_14) == HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_15))
-		  {
-			  cnt2--;
-		  }
-		  else
-		  {
-			  cnt2++;
-		  }
-	  }
-	  cnt2 = cnt2%60;
-  }
-}
+
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

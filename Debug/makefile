@@ -12,6 +12,7 @@ RM := rm -rf
 -include Drivers/STM32G4xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
+-include APP/src/subdir.mk
 -include subdir.mk
 -include objects.mk
 
@@ -56,7 +57,7 @@ main-build: TypeC-Power.elf secondary-outputs
 
 # Tool invocations
 TypeC-Power.elf: $(OBJS) $(USER_OBJS) D:\Users\CUBE_IDE\TypeC-Power\STM32G431CBUX_FLASH.ld
-	arm-none-eabi-gcc -o "TypeC-Power.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\Users\CUBE_IDE\TypeC-Power\STM32G431CBUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TypeC-Power.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "TypeC-Power.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\Users\CUBE_IDE\TypeC-Power\STM32G431CBUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TypeC-Power.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

@@ -4,13 +4,12 @@
  * @Autor: Xjf
  * @Date: 2020-11-03 12:13:37
  * @LastEditors: Xjf
- * @LastEditTime: 2021-06-20 23:42:45
+ * @LastEditTime: 2021-06-23 22:10:51
  */
 #ifndef __OLED_H
 #define __OLED_H 
 
 #include "stdlib.h"	
-#include "stm32g4xx_hal.h"
 #include "main.h"
 #define u8 unsigned char
 #define u16 unsigned short int
@@ -48,9 +47,6 @@ void OLED_ShowChar(u8 x,u8 y,u8 chr,u8 size1,u8 mode);
 void OLED_ShowChar6x8(u8 x,u8 y,u8 chr,u8 mode);
 void OLED_ShowString(u8 x,u8 y,u8 *chr,u8 size1,u8 mode);
 void OLED_ShowNum(u8 x,u8 y,u32 num,u8 len,u8 size1,u8 mode);
-void OLED_ShowChinese(u8 x,u8 y,u8 num,u8 size1,u8 mode);
-void OLED_ScrollDisplay(u8 num,u8 space,u8 mode);
-void OLED_ShowPicture(u8 x,u8 y,u8 sizex,u8 sizey,u8 BMP[],u8 mode);
 void OLED_Init(void);
 
 #endif
