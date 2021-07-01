@@ -1,3 +1,6 @@
+"APP/src/control.o"
+"APP/src/encoder.o"
+"APP/src/key.o"
 "APP/src/ui.o"
 "Core/Src/adc.o"
 "Core/Src/dac.o"

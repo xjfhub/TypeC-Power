@@ -1,5 +1,5 @@
-APP/src/ui.o: ../APP/src/ui.c ../APP/inc/ui.h ../Core/Inc/main.h \
- ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
+APP/src/ui.o: ../APP/src/ui.c ../APP/inc/ui.h ../HARDWARE/OLED/oled.h \
+ ../Core/Inc/main.h ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
  ../Core/Inc/stm32g4xx_hal_conf.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h \
@@ -32,10 +32,11 @@ APP/src/ui.o: ../APP/src/ui.c ../APP/inc/ui.h ../Core/Inc/main.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
- ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
- ../HARDWARE/OLED/oled.h
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h
 
 ../APP/inc/ui.h:
+
+../HARDWARE/OLED/oled.h:
 
 ../Core/Inc/main.h:
 
@@ -106,5 +107,3 @@ APP/src/ui.o: ../APP/src/ui.c ../APP/inc/ui.h ../Core/Inc/main.h \
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h:
 
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h:
-
-../HARDWARE/OLED/oled.h:
