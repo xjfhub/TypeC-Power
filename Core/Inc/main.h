@@ -32,15 +32,26 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "stdio.h"
 
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-extern uint32_t cnt1,cnt2;
-extern uint32_t sys_time_ms;
-extern uint32_t adc_buff[5];
+typedef struct 
+{
+  float Uin;
+  float Iin;
+  float Um;
+  float Uout;
+  float Iout;
+  uint8_t enable;
+}Power_type;
+
+extern Power_type g_power_set;
+extern Power_type g_power_atcual;
+extern Input_type g_input;
+extern uint32_t g_adc_buff[5];
+extern uint8_t g_err_code;
 
 /* USER CODE END ET */
 
@@ -66,6 +77,8 @@ void Error_Handler(void);
 #define CV_GPIO_Port GPIOB
 #define CC_Pin GPIO_PIN_1
 #define CC_GPIO_Port GPIOB
+#define ON_OFF_Pin GPIO_PIN_2
+#define ON_OFF_GPIO_Port GPIOB
 #define OLED_D1_Pin GPIO_PIN_10
 #define OLED_D1_GPIO_Port GPIOB
 #define OLED_D0_Pin GPIO_PIN_11
@@ -74,10 +87,22 @@ void Error_Handler(void);
 #define OLED_DC_GPIO_Port GPIOB
 #define OLED_RES_Pin GPIO_PIN_13
 #define OLED_RES_GPIO_Port GPIOB
+#define S1_A_Pin GPIO_PIN_14
+#define S1_A_GPIO_Port GPIOB
+#define S1_B_Pin GPIO_PIN_15
+#define S1_B_GPIO_Port GPIOB
+#define S1_M_Pin GPIO_PIN_6
+#define S1_M_GPIO_Port GPIOC
+#define S2_M_Pin GPIO_PIN_8
+#define S2_M_GPIO_Port GPIOA
+#define S2_A_Pin GPIO_PIN_11
+#define S2_A_GPIO_Port GPIOA
+#define S2_B_Pin GPIO_PIN_12
+#define S2_B_GPIO_Port GPIOA
 #define POWER_ON_Pin GPIO_PIN_10
 #define POWER_ON_GPIO_Port GPIOC
-#define POWER_CTRL_Pin GPIO_PIN_11
-#define POWER_CTRL_GPIO_Port GPIOC
+#define SHUTDOWN_Pin GPIO_PIN_11
+#define SHUTDOWN_GPIO_Port GPIOC
 #define LED_HEART_Pin GPIO_PIN_5
 #define LED_HEART_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */

@@ -1,5 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
+# Toolchain: GNU Tools for STM32 (9-2020-q2-update)
 ################################################################################
 
 -include ../makefile.init
@@ -30,6 +31,12 @@ endif
 
 -include ../makefile.defs
 
+OPTIONAL_TOOL_DEPS := \
+$(wildcard ../makefile.defs) \
+$(wildcard ../makefile.init) \
+$(wildcard ../makefile.targets) \
+
+
 BUILD_ARTIFACT_NAME := TypeC-Power
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX := 
@@ -56,22 +63,22 @@ all: main-build
 main-build: TypeC-Power.elf secondary-outputs
 
 # Tool invocations
-TypeC-Power.elf: $(OBJS) $(USER_OBJS) D:\Users\CUBE_IDE\TypeC-Power\STM32G431CBUX_FLASH.ld
-	arm-none-eabi-gcc -o "TypeC-Power.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\Users\CUBE_IDE\TypeC-Power\STM32G431CBUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TypeC-Power.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+TypeC-Power.elf: $(OBJS) $(USER_OBJS) E:\GitHub\TypeC-Power\STM32G431CBUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "TypeC-Power.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"E:\GitHub\TypeC-Power\STM32G431CBUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TypeC-Power.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-default.size.stdout: $(EXECUTABLES)
+default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-size  $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-TypeC-Power.list: $(EXECUTABLES)
+TypeC-Power.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "TypeC-Power.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-TypeC-Power.bin: $(EXECUTABLES)
+TypeC-Power.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "TypeC-Power.bin"
 	@echo 'Finished building: $@'
 	@echo ' '

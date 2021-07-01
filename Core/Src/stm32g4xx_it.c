@@ -23,7 +23,7 @@
 #include "stm32g4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "tim.h"
+#include "control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -222,41 +222,9 @@ void DMA1_Channel1_IRQHandler(void)
 void TIM3_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM3_IRQn 0 */
-  static uint16_t v_m_set=2000;
-  static uint16_t v_out_set=1000;
-
   HAL_GPIO_TogglePin(CC_GPIO_Port, CC_Pin);
-
-  sys_time_ms++;
-  /*升压控制*/
-  if(adc_buff[2]<v_m_set)
-  {
-	  __HAL_TIM_SetCompare(&htim16, TIM_CHANNEL_1, 1000-(v_m_set-adc_buff[2])/10);
-	  HAL_TIMEx_PWMN_Start(&htim16, TIM_CHANNEL_1); //TIM16_CH1N L
-  }
-  else
-  {
-	  __HAL_TIM_SetCompare(&htim16, TIM_CHANNEL_1, 1000);
-	  HAL_TIMEx_PWMN_Stop(&htim16, TIM_CHANNEL_1); //TIM16_CH1N L
-  }
-  /*降压控制*/
-  if(adc_buff[3]<v_out_set)
-  {
-	  __HAL_TIM_SetCompare(&htim17, TIM_CHANNEL_1, 700+(v_out_set-adc_buff[3])/10);
-	  HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1); //TIM17_CH1 L
-	  HAL_TIMEx_PWMN_Start(&htim17, TIM_CHANNEL_1); //TIM17_CH1N H
-  }
-  else
-  {
-	  __HAL_TIM_SetCompare(&htim17, TIM_CHANNEL_1, 0);
-	  HAL_TIM_PWM_Stop(&htim17, TIM_CHANNEL_1); //TIM17_CH1 L
-	  HAL_TIMEx_PWMN_Stop(&htim17, TIM_CHANNEL_1); //TIM17_CH1N H
-  }
-
-//  __HAL_TIM_SetCompare(&htim16, TIM_CHANNEL_1, 990);	//Vin/0.99
-//  __HAL_TIM_SetCompare(&htim17, TIM_CHANNEL_1, 200);	//VH*0.2
+  control();
   HAL_GPIO_TogglePin(CC_GPIO_Port, CC_Pin);
-
   /* USER CODE END TIM3_IRQn 0 */
   HAL_TIM_IRQHandler(&htim3);
   /* USER CODE BEGIN TIM3_IRQn 1 */
@@ -276,21 +244,6 @@ void USART1_IRQHandler(void)
   /* USER CODE BEGIN USART1_IRQn 1 */
 
   /* USER CODE END USART1_IRQn 1 */
-}
-
-/**
-  * @brief This function handles EXTI line[15:10] interrupts.
-  */
-void EXTI15_10_IRQHandler(void)
-{
-  /* USER CODE BEGIN EXTI15_10_IRQn 0 */
-
-  /* USER CODE END EXTI15_10_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
-  /* USER CODE BEGIN EXTI15_10_IRQn 1 */
-
-  /* USER CODE END EXTI15_10_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

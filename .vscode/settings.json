@@ -2,6 +2,11 @@
     "files.associations": {
         "main.h": "c",
         "oled.h": "c",
-        "oledfont.h": "c"
+        "oledfont.h": "c",
+        "encoder.h": "c",
+        "key.h": "c",
+        "control.h": "c",
+        "ui.h": "c",
+        "input.h": "c"
     }
 }
