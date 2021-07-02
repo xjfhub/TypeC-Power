@@ -31,6 +31,9 @@
 /* USER CODE BEGIN Includes */
 #include "oled.h"
 #include "ui.h"
+#include "input.h"
+#include "control.h"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -111,10 +114,10 @@ int main(void)
 
   HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 2048); //设置DAC1_CH1输出1.65V
   HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 2048); //设置DAC1_CH2输出1.65V
-  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);                           //�??启DAC1_CH1
-  HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);                           //�??启DAC1_CH2
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);                           //开启DAC1_CH1
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);                           //开启DAC1_CH2
   HAL_TIM_Base_Start_IT(&htim3);
-  OLED_Init();                                                    //OLED初始�??
+  OLED_Init();                                                    //OLED初始化
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -123,7 +126,6 @@ int main(void)
   {
     HAL_GPIO_TogglePin(LED_HEART_GPIO_Port, LED_HEART_Pin);
     main_ui();
-    printf("now time is %5d ms\n", sys_time_ms);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

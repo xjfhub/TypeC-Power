@@ -4,7 +4,7 @@
  * @Autor: Xjf
  * @Date: 2021-07-01 00:20:40
  * @LastEditors: Xjf
- * @LastEditTime: 2021-07-02 01:24:09
+ * @LastEditTime: 2021-07-02 18:39:43
  */
 #include "input.h"
 #include "encoder.h"
@@ -13,8 +13,8 @@
 
 /**
  * @description: 获取按键状态
- * @param {KEY} num
- * @return {*}
+ * @param {KEY} num  按键序号 一共四个按键
+ * @return {*}按键状态，长按时间，间隔时间
  */
 Key_type get_key(uint8_t num)
 {
@@ -24,6 +24,7 @@ Key_type get_key(uint8_t num)
     static uint32_t last_press_time[KEY_NUM] = {0};
     Key_type key = {0};
 
+    //更新按键状态
     last_state[num] = new_state[num];
     switch (num)
     {
@@ -52,36 +53,44 @@ Key_type get_key(uint8_t num)
         break;
     }
     }
-    key.state = new_state[num];
-    if(new_state[num] == 1)     
+    //储存按键状态
+    key.state = (last_state[num]<<1) | new_state[num];
+    switch (key.state)
     {
-        if ((last_state[num] == 0))//press
+        case PRESS:         //按下
         {
-            key.press = 1;
-            last_press_time[num] = press_time[num];
-            press_time[num] = sys_time_ms;
+            last_press_time[num] = press_time[num];     //记录上次按下时间
+            press_time[num] = HAL_GetTick();            //更新本次按下时间
+            key.continual_time = 0;                     //开始计算长按时间
+            key.gap_time = press_time[num] - last_press_time[num];  //计算两次按下间隔时间
+            break;
         }
-        else
+        case ON:            //打开
         {
-            key.continual_time = sys_time_ms - press_time[num];
+            key.continual_time = HAL_GetTick(); - press_time[num];
+            break;
+        }
+        case RELEASE:       //释放
+        {
+            break;
+        }
+        case OFF:           //关闭
+        {
+            break;
+        }
+        default:
+        {
+            break;
         }
     }
-    else
-    {
-        if(last_state[num] == 1)     //release
-        {
-            key.release = 1;
-        }
-    }
-    key.gap_time = press_time[num] - last_press_time[num];
     return key;
 }
 /**
- * @description: 
- * @param {uint16_t} *cnt
- * @return {*}
+ * @description: 获取编码器旋转值
+ * @param {uint8_t} num 编码器序号 一共两个编码器 
+ * @return {*}  正转移位返回 1，反转一位返回 -1 ， 不转返回 0
  */
-#if QUADRUPLE
+#if QUADRUPLE       //四倍频     AB上升下降沿都采集
 int8_t get_cnt(uint8_t num)
 {
     static uint8_t last_A[2] = {1, 1}, last_B[2] = {1, 1};
@@ -125,7 +134,11 @@ int8_t get_cnt(uint8_t num)
     return 0;
 }
 
+<<<<<<< HEAD
+#else               //不倍频
+=======
 #else
+>>>>>>> 295d2e61a2435f767282dc710d06e418ab82284e
 int8_t get_cnt(uint8_t num)
 {
     static uint8_t last_A[2] = {1, 1}, last_B[2] = {1, 1};

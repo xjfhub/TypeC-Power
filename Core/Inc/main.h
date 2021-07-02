@@ -32,7 +32,6 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "stdio.h"
 
 /* USER CODE END Includes */
 
@@ -45,10 +44,12 @@ typedef struct
   float Um;
   float Uout;
   float Iout;
+  uint8_t enable;
 }Power_type;
 
 extern Power_type g_power_set;
 extern Power_type g_power_atcual;
+extern Input_type g_input;
 extern uint32_t g_adc_buff[5];
 extern uint8_t g_err_code;
 

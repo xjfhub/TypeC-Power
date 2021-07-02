@@ -6,8 +6,7 @@ u8 OLED_GRAM[144][8];
 void delay(void)
 {
 	u8 t = 3;
-	while (t--)
-		;
+	while (t--);
 }
 void OLED_WR_Byte(u8 dat, u8 cmd)
 {
