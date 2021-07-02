@@ -62,6 +62,7 @@ extern uint8_t g_err_code;
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
+#define sys_time_ms uwTick
 
 /* USER CODE END EM */
 

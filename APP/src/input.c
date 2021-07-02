@@ -4,7 +4,7 @@
  * @Autor: Xjf
  * @Date: 2021-07-01 00:20:40
  * @LastEditors: Xjf
- * @LastEditTime: 2021-07-02 15:44:17
+ * @LastEditTime: 2021-07-02 18:39:43
  */
 #include "input.h"
 #include "encoder.h"
@@ -134,7 +134,11 @@ int8_t get_cnt(uint8_t num)
     return 0;
 }
 
+<<<<<<< HEAD
 #else               //不倍频
+=======
+#else
+>>>>>>> 295d2e61a2435f767282dc710d06e418ab82284e
 int8_t get_cnt(uint8_t num)
 {
     static uint8_t last_A[2] = {1, 1}, last_B[2] = {1, 1};

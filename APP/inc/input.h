@@ -4,7 +4,11 @@
  * @Autor: Xjf
  * @Date: 2021-07-01 00:18:44
  * @LastEditors: Xjf
- * @LastEditTime: 2021-07-02 15:45:10
+<<<<<<< HEAD
+ * @LastEditTime: 2021-07-02 18:44:45
+=======
+ * @LastEditTime: 2021-07-02 01:16:46
+>>>>>>> 295d2e61a2435f767282dc710d06e418ab82284e
  */
 #ifndef INPUT_H
 #define INPUT_H

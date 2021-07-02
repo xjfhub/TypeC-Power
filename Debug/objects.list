@@ -1,6 +1,11 @@
 "APP/src/control.o"
+<<<<<<< HEAD
 "APP/src/input.o"
 "APP/src/screen_printf.o"
+=======
+"APP/src/encoder.o"
+"APP/src/key.o"
+>>>>>>> 295d2e61a2435f767282dc710d06e418ab82284e
 "APP/src/ui.o"
 "Core/Src/adc.o"
 "Core/Src/cordic.o"

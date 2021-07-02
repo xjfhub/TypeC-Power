@@ -4,10 +4,9 @@
  * @Autor: Xjf
  * @Date: 2021-06-23 20:53:57
  * @LastEditors: Xjf
- * @LastEditTime: 2021-07-02 16:23:14
+ * @LastEditTime: 2021-07-02 18:40:28
  */
 #include "ui.h"
-#include "oled.h"
 
 #define FONT 8
 
