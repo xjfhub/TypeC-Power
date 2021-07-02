@@ -4,7 +4,7 @@
  * @Autor: Xjf
  * @Date: 2020-11-03 12:13:37
  * @LastEditors: Xjf
- * @LastEditTime: 2021-06-23 22:10:51
+ * @LastEditTime: 2021-07-03 00:31:02
  */
 #ifndef __OLED_H
 #define __OLED_H 
@@ -15,7 +15,7 @@
 #define u16 unsigned short int
 #define u32 unsigned long int
 
-//-----------------OLED�˿ڶ���---------------- 
+//-----------------OLED??????---------------- 
 
 #define OLED_SCL_Clr() HAL_GPIO_WritePin(OLED_D0_GPIO_Port, OLED_D0_Pin, GPIO_PIN_RESET)//SCL
 #define OLED_SCL_Set() HAL_GPIO_WritePin(OLED_D0_GPIO_Port, OLED_D0_Pin, GPIO_PIN_SET)
@@ -29,8 +29,8 @@
 #define OLED_DC_Clr()  HAL_GPIO_WritePin(OLED_DC_GPIO_Port, OLED_DC_Pin, GPIO_PIN_RESET)//DC
 #define OLED_DC_Set()  HAL_GPIO_WritePin(OLED_DC_GPIO_Port, OLED_DC_Pin, GPIO_PIN_SET)
 
-#define OLED_CMD  0	//д����
-#define OLED_DATA 1	//д����
+#define OLED_CMD  0	
+#define OLED_DATA 1	
 
 void OLED_ClearPoint(u8 x,u8 y);
 void OLED_ColorTurn(u8 i);

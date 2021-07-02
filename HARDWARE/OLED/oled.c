@@ -35,39 +35,39 @@ void OLED_ColorTurn(u8 i)
 {
 	if (i == 0)
 	{
-		OLED_WR_Byte(0xA6, OLED_CMD); //������ʾ
+		OLED_WR_Byte(0xA6, OLED_CMD); //???????
 	}
 	if (i == 1)
 	{
-		OLED_WR_Byte(0xA7, OLED_CMD); //��ɫ��ʾ
+		OLED_WR_Byte(0xA7, OLED_CMD); //??????
 	}
 }
 void OLED_DisplayTurn(u8 i)
 {
 	if (i == 0)
 	{
-		OLED_WR_Byte(0xC8, OLED_CMD); //������ʾ
+		OLED_WR_Byte(0xC8, OLED_CMD); //???????
 		OLED_WR_Byte(0xA1, OLED_CMD);
 	}
 	if (i == 1)
 	{
-		OLED_WR_Byte(0xC0, OLED_CMD); //��ת��ʾ
+		OLED_WR_Byte(0xC0, OLED_CMD); //??????
 		OLED_WR_Byte(0xA0, OLED_CMD);
 	}
 }
 
 void OLED_DisPlay_On(void)
 {
-	OLED_WR_Byte(0x8D, OLED_CMD); //��ɱ�ʹ��?
-	OLED_WR_Byte(0x14, OLED_CMD); //������ɱ�?
-	OLED_WR_Byte(0xAF, OLED_CMD); //������Ļ
+	OLED_WR_Byte(0x8D, OLED_CMD); //????????
+	OLED_WR_Byte(0x14, OLED_CMD); //?????????
+	OLED_WR_Byte(0xAF, OLED_CMD); //???????
 }
 
 void OLED_DisPlay_Off(void)
 {
-	OLED_WR_Byte(0x8D, OLED_CMD); //��ɱ�ʹ��?
-	OLED_WR_Byte(0x10, OLED_CMD); //�رյ�ɱ�?
-	OLED_WR_Byte(0xAE, OLED_CMD); //�ر���Ļ
+	OLED_WR_Byte(0x8D, OLED_CMD); //????????
+	OLED_WR_Byte(0x10, OLED_CMD); //???????
+	OLED_WR_Byte(0xAE, OLED_CMD); //??????
 }
 
 void OLED_Refresh(void)
@@ -75,9 +75,9 @@ void OLED_Refresh(void)
 	u8 i, n;
 	for (i = 0; i < 8; i++)
 	{
-		OLED_WR_Byte(0xb0 + i, OLED_CMD); //��������ʼ��ַ
-		OLED_WR_Byte(0x02, OLED_CMD);	  //���õ�����ʼ��ַ
-		OLED_WR_Byte(0x10, OLED_CMD);	  //���ø�����ʼ��ַ
+		OLED_WR_Byte(0xb0 + i, OLED_CMD); //????????????
+		OLED_WR_Byte(0x02, OLED_CMD);	  //?????????????
+		OLED_WR_Byte(0x10, OLED_CMD);	  //?????????????
 		for (n = 0; n < 128; n++)
 			OLED_WR_Byte(OLED_GRAM[n][i], OLED_DATA);
 	}
@@ -90,10 +90,10 @@ void OLED_Clear(void)
 	{
 		for (n = 0; n < 128; n++)
 		{
-			OLED_GRAM[n][i] = 0; //�����������?
+			OLED_GRAM[n][i] = 0; //????????????
 		}
 	}
-	OLED_Refresh(); //������ʾ
+	OLED_Refresh(); //???????
 }
 
 void OLED_DrawPoint(u8 x, u8 y, u8 t)
@@ -116,14 +116,14 @@ void OLED_DrawLine(u8 x1, u8 y1, u8 x2, u8 y2, u8 mode)
 	u16 t;
 	int xerr = 0, yerr = 0, delta_x, delta_y, distance;
 	int incx, incy, uRow, uCol;
-	delta_x = x2 - x1; //������������
+	delta_x = x2 - x1; //????????????
 	delta_y = y2 - y1;
-	uRow = x1; //�����������?
+	uRow = x1; //????????????
 	uCol = y1;
 	if (delta_x > 0)
-		incx = 1; //���õ�������
+		incx = 1; //???????????
 	else if (delta_x == 0)
-		incx = 0; //��ֱ��
+		incx = 0; //?????
 	else
 	{
 		incx = -1;
@@ -132,19 +132,19 @@ void OLED_DrawLine(u8 x1, u8 y1, u8 x2, u8 y2, u8 mode)
 	if (delta_y > 0)
 		incy = 1;
 	else if (delta_y == 0)
-		incy = 0; //ˮƽ��
+		incy = 0; //????
 	else
 	{
 		incy = -1;
 		delta_y = -delta_x;
 	}
 	if (delta_x > delta_y)
-		distance = delta_x; //ѡȡ��������������
+		distance = delta_x; //????????????????
 	else
 		distance = delta_y;
 	for (t = 0; t < distance + 1; t++)
 	{
-		OLED_DrawPoint(uRow, uCol, mode); //����
+		OLED_DrawPoint(uRow, uCol, mode); //????
 		xerr += delta_x;
 		yerr += delta_y;
 		if (xerr > distance)
@@ -178,7 +178,7 @@ void OLED_DrawCircle(u8 x, u8 y, u8 r)
 		OLED_DrawPoint(x - b, y + a, 1);
 
 		a++;
-		num = (a * a + b * b) - r * r; //���㻭�ĵ���Բ�ĵľ���
+		num = (a * a + b * b) - r * r; //????????????????
 		if (num > 0)
 		{
 			b--;
@@ -273,7 +273,7 @@ void OLED_ShowNum(u8 x, u8 y, u32 num, u8 len, u8 size1, u8 mode)
 		}
 	}
 }
-//OLED�ĳ�ʼ��
+//OLED??????
 void OLED_Init(void)
 {
 	OLED_RES_Clr();
@@ -292,7 +292,7 @@ void OLED_Init(void)
 	OLED_WR_Byte(0xA8, OLED_CMD); /*multiplex ratio*/
 	OLED_WR_Byte(0x3F, OLED_CMD); /*duty = 1/64*/
 	OLED_WR_Byte(0xad, OLED_CMD); /*set charge pump enable*/
-	OLED_WR_Byte(0x8b, OLED_CMD); /* 0x8B �ڹ� VCC */
+	OLED_WR_Byte(0x8b, OLED_CMD); /* 0x8B ??? VCC */
 	OLED_WR_Byte(0x33, OLED_CMD); /*0X30---0X33 set VPP 9V */
 	OLED_WR_Byte(0xC8, OLED_CMD); /*Com scan direction*/
 	OLED_WR_Byte(0xD3, OLED_CMD); /*set display offset*/

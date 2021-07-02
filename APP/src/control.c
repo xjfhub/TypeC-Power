@@ -1,31 +1,31 @@
 /*
- * @Description: ç”µåŽ‹æŽ§åˆ¶ä¸»è¦ç›¸å…³ç¨‹åº
+ * @Description: µçÑ¹¿ØÖÆÖ÷ÒªÏà¹Ø³ÌÐò
  * @Version: 
  * @Autor: Xjf
  * @Date: 2021-07-01 00:22:14
  * @LastEditors: Xjf
- * @LastEditTime: 2021-07-02 18:37:31
+ * @LastEditTime: 2021-07-03 01:38:20
  */
 #include "control.h"
 #include "input.h"
 #include "tim.h"
 
 /**
- * @description: èŽ·å–å®žé™…ç”µæºå‚æ•°ï¼Œé™ADé‡‡æ ·ä¿¡å·è½¬æ¢æˆå®žé™…ä¿¡å·
- * @param {uint32_t} adc adcè½¬æ¢æ•°ç»„
- * @param {Power_type} *atcual è®¡ç®—çš„å®žé™…ç”µåŽ‹ç”µæµ
+ * @description: »ñÈ¡Êµ¼ÊµçÔ´²ÎÊý£¬½µAD²ÉÑùÐÅºÅ×ª»»³ÉÊµ¼ÊÐÅºÅ
+ * @param {uint32_t} adc adc×ª»»Êý×é
+ * @param {Power_type} *atcual ¼ÆËãµÄÊµ¼ÊµçÑ¹µçÁ÷
  * @return {*}
  */
 static void get_atcual_power(uint32_t *adc, Power_type *atcual)
 {
-    atcual->Uin = adc[0]/105;
-    atcual->Iin = adc[1]/105;
-    atcual->Um = adc[2]/105;
-    atcual->Uout = adc[3]/105;
-    atcual->Iout = adc[4]/105;
+    atcual->Uin = adc[0]/105.0;
+    atcual->Iin = (adc[1]-1980.0)/372.0;
+    atcual->Um = adc[2]/105.0;
+    atcual->Uout = adc[3]/105.0;
+    atcual->Iout = (adc[4]-1980.0)/372.0;
 }
 /**
- * @description: èŽ·å–æŒ‰é”®å’Œç¼–ç å™¨æŽ§åˆ¶ä¿¡æ¯
+ * @description: »ñÈ¡°´¼üºÍ±àÂëÆ÷¿ØÖÆÐÅÏ¢
  * @param {Input_type} *input
  * @return {*}
  */
@@ -40,8 +40,8 @@ static void get_input(Input_type *input)
 }
 /**
  * @description: 
- * @param {Input_type} input æŒ‰é”®è¾“å…¥ä¿¡å·
- * @param {Power_type} *set è®¾å®šç”µåŽ‹
+ * @param {Input_type} input °´¼üÊäÈëÐÅºÅ
+ * @param {Power_type} *set Éè¶¨µçÑ¹
  * @return {*}
  */
 static void set_power(Input_type input, Power_type *set)
@@ -49,7 +49,7 @@ static void set_power(Input_type input, Power_type *set)
     set->Uin = 20;
     set->Iin = 1;
     set->Um = ((set->Uin > set->Uout)?set->Uin:set->Uout) + 1;
-    set->Uout = set->Uout + 0.1*input.ENC_U_adj;
+    set->Uout = set->Uout + 1*input.ENC_U_adj;
     set->Iout = set->Iout + 0.1*input.ENC_I_adj;
     set->enable = (input.key_switch.state == RELEASE)?(!set->enable):(set->enable);
 }
@@ -58,39 +58,81 @@ static void pwm_control(Power_type set, Power_type atcual)
     uint16_t boost_pwm, buck_pwm;
     uint8_t boost_l_en, boost_h_en, buck_l_en, buck_h_en;
     
-    /*å‡åŽ‹æŽ§åˆ¶*/
-    /* å¦‚æžœè¾“å…¥ç”µæµä¸ºæ­£ï¼Œæ‰“å¼€ä¸Šç®¡æå‡æ•ˆçŽ‡*/
-    if(atcual.Iin > 0.02)
+    /*ÉýÑ¹¿ØÖÆ*/
+    /* ÊäÈëµçÁ÷ÎªÕý£¬´ò¿ªÉÏ¹ÜÌáÉýÐ§ÂÊ*/
+    if(atcual.Iin > set.Iin)    //ÊäÈëµçÁ÷¹ý´ó
     {
-        boost_h_en = ENABLE;
-    }
-    else
-    {
+        boost_l_en = DISABLE;
         boost_h_en = DISABLE;
     }
-    if (g_adc_buff[2] < v_m_set)
+    else
     {
-        __HAL_TIM_SetCompare(&htim16, TIM_CHANNEL_1, 200);
-        HAL_TIMEx_PWMN_Start(&htim16, TIM_CHANNEL_1); //TIM16_CH1N L
+        if (atcual.Um < set.Um)
+        {
+            boost_l_en = ENABLE;
+        }
+        else
+        {
+            boost_l_en = DISABLE;
+        }
+        if(atcual.Iin > 0.02)
+        {
+            boost_h_en = ENABLE;
+        }
+        else
+        {
+            boost_h_en = DISABLE;
+        }
+    }
+
+    if (atcual.Um < set.Um)
+    {
+        boost_pwm = 500 - (set.Um - atcual.Um)*2;
     }
     else
     {
-        __HAL_TIM_SetCompare(&htim16, TIM_CHANNEL_1, 200);
+        boost_pwm = 500;
+    }
+    if(boost_l_en == ENABLE)
+    {
+        HAL_TIMEx_PWMN_Start(&htim16, TIM_CHANNEL_1);//TIM16_CH1N L
+    }
+    else
+    {
         HAL_TIMEx_PWMN_Stop(&htim16, TIM_CHANNEL_1); //TIM16_CH1N L
     }
-    /*é™åŽ‹æŽ§åˆ¶*/
-    if (g_adc_buff[3] < v_out_set)
-    {
-        __HAL_TIM_SetCompare(&htim17, TIM_CHANNEL_1, ((float)v_out_set / v_m_set) * 200 + (v_out_set - g_adc_buff[3]) / 50);
-        HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1);    //TIM17_CH1 L
-        HAL_TIMEx_PWMN_Start(&htim17, TIM_CHANNEL_1); //TIM17_CH1N H
-    }
-    else
-    {
-        __HAL_TIM_SetCompare(&htim17, TIM_CHANNEL_1, 0);
-        HAL_TIM_PWM_Stop(&htim17, TIM_CHANNEL_1);    //TIM17_CH1 L
-        HAL_TIMEx_PWMN_Stop(&htim17, TIM_CHANNEL_1); //TIM17_CH1N H
-    }
+    // if(boost_h_en == ENABLE)
+    // {
+    //     HAL_TIM_PWM_Start(&htim16, TIM_CHANNEL_1);//TIM16_CH1 H
+    // }
+    // else
+    // {
+        HAL_TIM_PWM_Stop(&htim16, TIM_CHANNEL_1); //TIM16_CH1 H
+    // }
+    __HAL_TIM_SetCompare(&htim16, TIM_CHANNEL_1, boost_pwm);
+//    if (g_adc_buff[2] < v_m_set)
+//    {
+//        __HAL_TIM_SetCompare(&htim16, TIM_CHANNEL_1, 200);
+//        HAL_TIMEx_PWMN_Start(&htim16, TIM_CHANNEL_1); //TIM16_CH1N L
+//    }
+//    else
+//    {
+//        __HAL_TIM_SetCompare(&htim16, TIM_CHANNEL_1, 200);
+//        HAL_TIMEx_PWMN_Stop(&htim16, TIM_CHANNEL_1); //TIM16_CH1N L
+//    }
+//    /*½µÑ¹¿ØÖÆ*/
+//    if (g_adc_buff[3] < v_out_set)
+//    {
+//        __HAL_TIM_SetCompare(&htim17, TIM_CHANNEL_1, ((float)v_out_set / v_m_set) * 200 + (v_out_set - g_adc_buff[3]) / 50);
+//        HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1);    //TIM17_CH1 L
+//        HAL_TIMEx_PWMN_Start(&htim17, TIM_CHANNEL_1); //TIM17_CH1N H
+//    }
+//    else
+//    {
+//        __HAL_TIM_SetCompare(&htim17, TIM_CHANNEL_1, 0);
+//        HAL_TIM_PWM_Stop(&htim17, TIM_CHANNEL_1);    //TIM17_CH1 L
+//        HAL_TIMEx_PWMN_Stop(&htim17, TIM_CHANNEL_1); //TIM17_CH1N H
+//    }
 }
 void control(void)
 {

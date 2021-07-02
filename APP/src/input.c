@@ -4,17 +4,18 @@
  * @Autor: Xjf
  * @Date: 2021-07-01 00:20:40
  * @LastEditors: Xjf
- * @LastEditTime: 2021-07-02 18:39:43
+ * @LastEditTime: 2021-07-03 01:02:15
  */
 #include "input.h"
-#include "encoder.h"
 
-#define QUADRUPLE 0 //ABä¸Šå‡ä¸‹é™éƒ½é‡‡é›† å››å€é¢‘
+#define QUADRUPLE 0 //ABÉÏÉıÏÂ½µ¶¼²É¼¯ ËÄ±¶Æµ
+
+Input_type g_input;
 
 /**
- * @description: è·å–æŒ‰é”®çŠ¶æ€
- * @param {KEY} num  æŒ‰é”®åºå· ä¸€å…±å››ä¸ªæŒ‰é”®
- * @return {*}æŒ‰é”®çŠ¶æ€ï¼Œé•¿æŒ‰æ—¶é—´ï¼Œé—´éš”æ—¶é—´
+ * @description: »ñÈ¡°´¼ü×´Ì¬
+ * @param {KEY} num  °´¼üĞòºÅ Ò»¹²ËÄ¸ö°´¼ü
+ * @return {*}°´¼ü×´Ì¬£¬³¤°´Ê±¼ä£¬¼ä¸ôÊ±¼ä
  */
 Key_type get_key(uint8_t num)
 {
@@ -24,7 +25,7 @@ Key_type get_key(uint8_t num)
     static uint32_t last_press_time[KEY_NUM] = {0};
     Key_type key = {0};
 
-    //æ›´æ–°æŒ‰é”®çŠ¶æ€
+    //¸üĞÂ°´¼ü×´Ì¬
     last_state[num] = new_state[num];
     switch (num)
     {
@@ -38,12 +39,12 @@ Key_type get_key(uint8_t num)
         new_state[num] = !HAL_GPIO_ReadPin(SHUTDOWN_GPIO_Port, SHUTDOWN_Pin);
         break;
     }
-    case ENC0:
+    case U_SET:
     {
         new_state[num] = !HAL_GPIO_ReadPin(S1_M_GPIO_Port, S1_M_Pin);
         break;
     }
-    case ENC1:
+    case I_SET:
     {
         new_state[num] = !HAL_GPIO_ReadPin(S2_M_GPIO_Port, S2_M_Pin);
         break;
@@ -53,28 +54,28 @@ Key_type get_key(uint8_t num)
         break;
     }
     }
-    //å‚¨å­˜æŒ‰é”®çŠ¶æ€
+    //´¢´æ°´¼ü×´Ì¬
     key.state = (last_state[num]<<1) | new_state[num];
     switch (key.state)
     {
-        case PRESS:         //æŒ‰ä¸‹
+        case PRESS:         //°´ÏÂ
         {
-            last_press_time[num] = press_time[num];     //è®°å½•ä¸Šæ¬¡æŒ‰ä¸‹æ—¶é—´
-            press_time[num] = HAL_GetTick();            //æ›´æ–°æœ¬æ¬¡æŒ‰ä¸‹æ—¶é—´
-            key.continual_time = 0;                     //å¼€å§‹è®¡ç®—é•¿æŒ‰æ—¶é—´
-            key.gap_time = press_time[num] - last_press_time[num];  //è®¡ç®—ä¸¤æ¬¡æŒ‰ä¸‹é—´éš”æ—¶é—´
+            last_press_time[num] = press_time[num];     //¼ÇÂ¼ÉÏ´Î°´ÏÂÊ±¼ä
+            press_time[num] = HAL_GetTick();            //¸üĞÂ±¾´Î°´ÏÂÊ±¼ä
+            key.continual_time = 0;                     //¿ªÊ¼¼ÆËã³¤°´Ê±¼ä
+            key.gap_time = press_time[num] - last_press_time[num];  //¼ÆËãÁ½´Î°´ÏÂ¼ä¸ôÊ±¼ä
             break;
         }
-        case ON:            //æ‰“å¼€
+        case ON:            //´ò¿ª
         {
             key.continual_time = HAL_GetTick(); - press_time[num];
             break;
         }
-        case RELEASE:       //é‡Šæ”¾
+        case RELEASE:       //ÊÍ·Å
         {
             break;
         }
-        case OFF:           //å…³é—­
+        case OFF:           //¹Ø±Õ
         {
             break;
         }
@@ -86,11 +87,11 @@ Key_type get_key(uint8_t num)
     return key;
 }
 /**
- * @description: è·å–ç¼–ç å™¨æ—‹è½¬å€¼
- * @param {uint8_t} num ç¼–ç å™¨åºå· ä¸€å…±ä¸¤ä¸ªç¼–ç å™¨ 
- * @return {*}  æ­£è½¬ç§»ä½è¿”å› 1ï¼Œåè½¬ä¸€ä½è¿”å› -1 ï¼Œ ä¸è½¬è¿”å› 0
+ * @description: »ñÈ¡±àÂëÆ÷Ğı×ªÖµ
+ * @param {uint8_t} num ±àÂëÆ÷ĞòºÅ Ò»¹²Á½¸ö±àÂëÆ÷ 
+ * @return {*}  Õı×ªÒÆÎ»·µ»Ø 1£¬·´×ªÒ»Î»·µ»Ø -1 £¬ ²»×ª·µ»Ø 0
  */
-#if QUADRUPLE       //å››å€é¢‘     ABä¸Šå‡ä¸‹é™æ²¿éƒ½é‡‡é›†
+#if QUADRUPLE       //ËÄ±¶Æµ     ABÉÏÉıÏÂ½µÑØ¶¼²É¼¯
 int8_t get_cnt(uint8_t num)
 {
     static uint8_t last_A[2] = {1, 1}, last_B[2] = {1, 1};
@@ -113,32 +114,27 @@ int8_t get_cnt(uint8_t num)
     {
         if(new_A[num] != new_B[num])
         {
-            return 1;
+            return -1;
         }
         else
         {
-            return -1;
+            return 1;
         }
     }
     if(new_B[num] != last_B[num])
     {
         if(new_A[num] != new_B[num])
         {
-            return -1;
+            return 1;
         }
         else
         {
-            return 1;
+            return -1;
         }
     }
     return 0;
 }
-
-<<<<<<< HEAD
-#else               //ä¸å€é¢‘
-=======
-#else
->>>>>>> 295d2e61a2435f767282dc710d06e418ab82284e
+#else               //²»±¶Æµ
 int8_t get_cnt(uint8_t num)
 {
     static uint8_t last_A[2] = {1, 1}, last_B[2] = {1, 1};
@@ -161,11 +157,11 @@ int8_t get_cnt(uint8_t num)
     {
         if ((last_A[num] == GPIO_PIN_RESET) && (last_B[num] == GPIO_PIN_SET))
         {
-            return 1;
+            return -1;
         }
         if ((last_A[num] == GPIO_PIN_SET) && (last_B[num] == GPIO_PIN_RESET))
         {
-            return -1;
+            return 1;
         }
     }
     return 0;

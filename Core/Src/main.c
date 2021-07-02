@@ -56,7 +56,7 @@
 Power_type g_power_set;
 Power_type g_power_atcual;
 Input_type g_input;
-uint32_t g_adc_buff[5];			//äº”è·¯ADé‡‡æ ·[è¾“å…¥ç”µå‹ï¼Œè¾“å…¥ç”µæµï¼Œä¸­ç‚¹ç”µå‹ï¼Œè¾“å‡ºç”µå‹ï¼Œè¾“å‡ºç”µæµ]
+uint32_t g_adc_buff[5];			//ÎåÂ·AD²ÉÑù[ÊäÈëµçÑ¹£¬ÊäÈëµçÁ÷£¬ÖĞµãµçÑ¹£¬Êä³öµçÑ¹£¬Êä³öµçÁ÷]
 uint8_t g_err_code = 0;
 /* USER CODE END PV */
 
@@ -109,15 +109,15 @@ int main(void)
   MX_TIM3_Init();
   MX_CORDIC_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start(&htim2);             //TIM2è§¦å‘ADC
-  HAL_ADC_Start_DMA(&hadc2, g_adc_buff, 5); //å¼€å¯DMA
+  HAL_TIM_Base_Start(&htim2);             //TIM2´¥·¢ADC
+  HAL_ADC_Start_DMA(&hadc2, g_adc_buff, 5); //¿ªÆôDMA
 
-  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 2048); //è®¾ç½®DAC1_CH1è¾“å‡º1.65V
-  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 2048); //è®¾ç½®DAC1_CH2è¾“å‡º1.65V
-  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);                           //å¼€å¯DAC1_CH1
-  HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);                           //å¼€å¯DAC1_CH2
+  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 2048); //ÉèÖÃDAC1_CH1Êä³ö1.65V
+  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 2048); //ÉèÖÃDAC1_CH2Êä³ö1.65V
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);                           //¿ªÆôDAC1_CH1
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);                           //¿ªÆôDAC1_CH2
   HAL_TIM_Base_Start_IT(&htim3);
-  OLED_Init();                                                    //OLEDåˆå§‹åŒ–
+  OLED_Init();                                                    //OLED³õÊ¼»¯
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -125,7 +125,7 @@ int main(void)
   while (1)
   {
     HAL_GPIO_TogglePin(LED_HEART_GPIO_Port, LED_HEART_Pin);
-    main_ui();
+    main_ui(g_power_set, g_power_atcual);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

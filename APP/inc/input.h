@@ -4,7 +4,7 @@
  * @Autor: Xjf
  * @Date: 2021-07-01 00:18:44
  * @LastEditors: Xjf
- * @LastEditTime: 2021-07-02 22:40:08
+ * @LastEditTime: 2021-07-03 00:31:44
  */
 #ifndef INPUT_H
 #define INPUT_H
@@ -14,9 +14,9 @@ enum KEY{ON_OFF, SHUTDOWN, U_SET, I_SET, KEY_NUM};
 enum KEY_STATE{OFF, PRESS, RELEASE, ON};
 
 typedef struct{
-    uint8_t state;              //æŒ‰é”®çŠ¶æ€  b00,
-    uint32_t continual_time;    //æŒ‰ä¸‹æŒç»­æ—¶é—´  ç”¨æ¥åˆ¤æ–­é•¿æŒ‰
-    uint32_t gap_time;          //ä¸¤æ¬¡æŒ‰ä¸‹é—´éš”æ—¶é—´ ç”¨æ¥åˆ¤æ–­è¿æŒ‰
+    uint8_t state;              //°´¼ü×´Ì¬  b00,
+    uint32_t continual_time;    //°´ÏÂ³ÖĞøÊ±¼ä  ÓÃÀ´ÅĞ¶Ï³¤°´
+    uint32_t gap_time;          //Á½´Î°´ÏÂ¼ä¸ôÊ±¼ä ÓÃÀ´ÅĞ¶ÏÁ¬°´
 }Key_type;
 
 typedef struct
@@ -29,7 +29,9 @@ typedef struct
     int8_t ENC_I_adj;
 }Input_type;
 
-Key_type get_key(uint8_t num)
+extern Input_type g_input;
+
+Key_type get_key(uint8_t num);
 int8_t get_cnt(uint8_t num);
 
 #endif

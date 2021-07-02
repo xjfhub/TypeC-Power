@@ -8,18 +8,13 @@
  */
 #ifndef UI_H
 #define UI_H
-#include "oled.h"
+#include "main.h"
 
 typedef struct
 {
     uint8_t menu;
 }Menu_type;
 
-typedef struct
-{
-    uint8_t menu;
-}Menu_type;
-
-void main_ui(void);
+void main_ui(Power_type set, Power_type atcual);
 
 #endif

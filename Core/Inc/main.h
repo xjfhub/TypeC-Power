@@ -49,7 +49,6 @@ typedef struct
 
 extern Power_type g_power_set;
 extern Power_type g_power_atcual;
-extern Input_type g_input;
 extern uint32_t g_adc_buff[5];
 extern uint8_t g_err_code;
 
