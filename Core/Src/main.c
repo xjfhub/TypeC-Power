@@ -34,6 +34,8 @@
 #include "input.h"
 #include "control.h"
 #include "stdio.h"
+#include "math.h"
+#include "arm_math.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -126,6 +128,7 @@ int main(void)
   {
     HAL_GPIO_TogglePin(LED_HEART_GPIO_Port, LED_HEART_Pin);
     main_ui(g_power_set, g_power_atcual);
+    printf("sin(1)=%f",arm_sin_f32(1));
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
