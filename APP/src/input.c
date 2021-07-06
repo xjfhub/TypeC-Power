@@ -68,7 +68,7 @@ Key_type get_key(uint8_t num)
         }
         case ON:            //打开
         {
-            key.continual_time = HAL_GetTick(); - press_time[num];
+            key.continual_time = HAL_GetTick() - press_time[num];
             break;
         }
         case RELEASE:       //释放
@@ -88,7 +88,7 @@ Key_type get_key(uint8_t num)
 }
 /**
  * @description: 获取编码器旋转值
- * @param {uint8_t} num 编码器序号 一共两个编码器 
+ * @param {uint8_t} num 编码器序号 一共两个编码器
  * @return {*}  正转移位返回 1，反转一位返回 -1 ， 不转返回 0
  */
 #if QUADRUPLE       //四倍频     AB上升下降沿都采集

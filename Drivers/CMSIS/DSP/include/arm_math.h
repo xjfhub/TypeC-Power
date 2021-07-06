@@ -5785,7 +5785,7 @@ __STATIC_FORCEINLINE void arm_inv_park_q31(
    * @param[in] x  input value in radians.
    * @return  cos(x).
    */
-  float32_t arm_cos_f32(
+  extern float32_t arm_cos_f32(
   float32_t x);
 
 
